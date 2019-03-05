@@ -12,7 +12,12 @@ function result(x,time,today){
 function update(){
 	var today = new Date();
 	var day = today.getDay();
-	var time = today.getHours() + ":" + today.getMinutes();
+	if (today.getMinutes()<10){
+		var time = today.getHours() + ':0' + today.getMinutes()
+	}
+	else{
+		var time = today.getHours() + ':' + today.getMinutes()
+	}
 	var minutes = today.getHours()*60 + today.getMinutes();
     var remaining;
     var endtime;
