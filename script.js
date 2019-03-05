@@ -13,7 +13,7 @@ function update(){
 	var today = new Date();
 	var day = today.getDay();
 	var time = today.getHours() + ":" + today.getMinutes();
-	var minutes = today.getMinutes();
+	var minutes = today.getHours()*60 + today.getMinutes();
     var remaining;
     var endtime;
 	if ([1,3,5].includes(day)){
