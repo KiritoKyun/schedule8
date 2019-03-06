@@ -4,24 +4,27 @@ function t2min(x){
 function result(x,time,today){
 	return ((t2min(x)-t2min(time)-1).toString() + ' minute(s) and ' + (60-parseInt(today.getSeconds(),10)).toString() + ' second(s) remaining');
 }
-function update(){
-	var today = new Date();
-	var day = today.getDay();
+function definetime(){
+	window.today = new Date();
+	window.day = today.getDay();
 	if (today.getMinutes()<10 && today.getHours()<10){
-		var time = '0' + today.getHours() + ':0' + today.getMinutes()
+		window.time = '0' + today.getHours() + ':0' + today.getMinutes()
 	}
 	else if (today.getMinutes()<10){
-		var time = today.getHours() + ':0' + today.getMinutes()
+		window.time = today.getHours() + ':0' + today.getMinutes()
 	}
 	else if (today.getHours()<10){
-		var time = '0' + today.getHours() + ':' + today.getMinutes()
+		window.time = '0' + today.getHours() + ':' + today.getMinutes()
 	}
 	else{
-		var time = today.getHours() + ':' + today.getMinutes()
+		window.time = today.getHours() + ':' + today.getMinutes()
 	}
-	var minutes = today.getHours()*60 + today.getMinutes();
-    var remaining;
-	var endtime;
+	window.minutes = today.getHours()*60 + today.getMinutes();
+    window.remaining;
+	window.endtime;
+}
+function update(){
+	definetime()
 	if ([1,3,5].includes(day)){
 		if (t2min('07:45') <= minutes && minutes < t2min('08:39')){
             endtime = '8:39'
@@ -98,28 +101,12 @@ function update(){
         endtime = '00:00'
 		remaining = 'Not in school'
 	}
-	var late = false
+	window.late = false
     document.getElementById('time').innerHTML = endtime
     document.getElementById('timeRemaining').innerHTML = remaining
 }
 function latestart(){
-	var today = new Date();
-	var day = today.getDay();
-	if (today.getMinutes()<10 && today.getHours()<10){
-		var time = '0' + today.getHours() + ':0' + today.getMinutes()
-	}
-	else if (today.getMinutes()<10){
-		var time = today.getHours() + ':0' + today.getMinutes()
-	}
-	else if (today.getHours()<10){
-		var time = '0' + today.getHours() + ':' + today.getMinutes()
-	}
-	else{
-		var time = today.getHours() + ':' + today.getMinutes()
-	}
-	var minutes = today.getHours()*60 + today.getMinutes();
-    var remaining;
-	var endtime;
+	definetime()
 	if (t2min('09:14') <= minutes && minutes < t2min('09:54')){
 		endtime = '9:54'
 		remaining = result('09:54',time,today);
@@ -156,11 +143,10 @@ function latestart(){
         endtime = '00:00'
 		remaining = 'Not in school'
 	}
-	var late = true
+	window.late = true
 	document.getElementById('time').innerHTML = endtime
     document.getElementById('timeRemaining').innerHTML = remaining
 }
-/*
 document.body.onkeyup = function(e){
     if(e.keyCode == 13){
         if (late){
@@ -171,5 +157,4 @@ document.body.onkeyup = function(e){
 		}
 	}
 }
-*/
 update()
