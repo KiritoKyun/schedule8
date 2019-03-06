@@ -7,8 +7,14 @@ function result(x,time,today){
 function update(){
 	var today = new Date();
 	var day = today.getDay();
-	if (today.getMinutes()<10){
+	if (today.getMinutes()<10 && today.getHours()<10){
+		var time = '0' + today.getHours() + ':0' + today.getMinutes()
+	}
+	else if (today.getMinutes()<10){
 		var time = today.getHours() + ':0' + today.getMinutes()
+	}
+	else if (today.getHours()<10){
+		var time = '0' + today.getHours() + ':' + today.getMinutes()
 	}
 	else{
 		var time = today.getHours() + ':' + today.getMinutes()
@@ -92,15 +98,21 @@ function update(){
         endtime = '00:00'
 		remaining = 'Not in school'
 	}
-	var latestart = false
+	var late = false
     document.getElementById('time').innerHTML = endtime
     document.getElementById('timeRemaining').innerHTML = remaining
 }
 function latestart(){
 	var today = new Date();
 	var day = today.getDay();
-	if (today.getMinutes()<10){
+	if (today.getMinutes()<10 && today.getHours()<10){
+		var time = '0' + today.getHours() + ':0' + today.getMinutes()
+	}
+	else if (today.getMinutes()<10){
 		var time = today.getHours() + ':0' + today.getMinutes()
+	}
+	else if (today.getHours()<10){
+		var time = '0' + today.getHours() + ':' + today.getMinutes()
 	}
 	else{
 		var time = today.getHours() + ':' + today.getMinutes()
@@ -144,13 +156,14 @@ function latestart(){
         endtime = '00:00'
 		remaining = 'Not in school'
 	}
-	var latestart = true
+	var late = true
 	document.getElementById('time').innerHTML = endtime
     document.getElementById('timeRemaining').innerHTML = remaining
 }
+/*
 document.body.onkeyup = function(e){
     if(e.keyCode == 13){
-        if (latestart){
+        if (late){
 			latestart()
 		}
 		else{
@@ -158,4 +171,5 @@ document.body.onkeyup = function(e){
 		}
 	}
 }
+*/
 update()
