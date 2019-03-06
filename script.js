@@ -2,12 +2,7 @@ function t2min(x){
 	return (parseInt(x.slice(0,2),10)*60+parseInt(x.slice(3),10));
 }
 function result(x,time,today){
-	if (parseInt(x.slice(0,2))>12){
-		return ((t2min(x)-t2min(time)-1).toString() + ' minutes(s) and ' + (60-parseInt(today.getSeconds(),10)).toString() + ' second(s) remaining');
-	}
-	else{
-		return ((t2min(x)-t2min(time)-1).toString() + ' minutes(s) and ' + (60-parseInt(today.getSeconds(),10)).toString() + ' second(s) remaining');
-	}
+	return ((t2min(x)-t2min(time)-1).toString() + ' minute(s) and ' + (60-parseInt(today.getSeconds(),10)).toString() + ' second(s) remaining');
 }
 function update(){
 	var today = new Date();
@@ -20,7 +15,7 @@ function update(){
 	}
 	var minutes = today.getHours()*60 + today.getMinutes();
     var remaining;
-    var endtime;
+	var endtime;
 	if ([1,3,5].includes(day)){
 		if (t2min('07:45') <= minutes && minutes < t2min('08:39')){
             endtime = '8:39'
@@ -97,9 +92,70 @@ function update(){
         endtime = '00:00'
 		remaining = 'Not in school'
 	}
-	var endtimeContainer = document.getElementById("time")
-    endtimeContainer.innerHTML = endtime
-    var remainingContainer = document.getElementById('timeRemaining')
-    remainingContainer.innerHTML = remaining
+	var latestart = false
+    document.getElementById('time').innerHTML = endtime
+    document.getElementById('timeRemaining').innerHTML = remaining
+}
+function latestart(){
+	var today = new Date();
+	var day = today.getDay();
+	if (today.getMinutes()<10){
+		var time = today.getHours() + ':0' + today.getMinutes()
+	}
+	else{
+		var time = today.getHours() + ':' + today.getMinutes()
+	}
+	var minutes = today.getHours()*60 + today.getMinutes();
+    var remaining;
+	var endtime;
+	if (t2min('09:14') <= minutes && minutes < t2min('09:54')){
+		endtime = '9:54'
+		remaining = result('09:54',time,today);
+	}
+	else if (t2min('09:54') <= minutes && minutes < t2min('10:39')){
+		endtime = '10:39'
+		remaining = result('10:39',time,today);
+	}
+	else if (t2min('10:39') <= minutes && minutes < t2min('10:51')){
+		endtime = '10:51'
+		remaining = result('10:51',time,today);
+	}
+	else if (t2min('10:51') <= minutes && minutes < t2min('11:36')){
+		endtime = '11:36'
+		remaining = result('11:36',time,today);
+	}
+	else if (t2min('11:36') <= minutes && minutes < t2min('12:21')){
+		endtime = '12:21'
+		remaining = result('12:21',time,today);
+	}
+	else if (t2min('12:21') <= minutes && minutes < t2min('13:06')){
+		endtime = '1:06'
+		remaining = result('13:06',time,today);
+	}
+	else if (t2min('13:06') <= minutes && minutes < t2min('13:36')){
+		endtime = '1:36'
+		remaining = result('13:36',time,today);
+	}
+	else if (t2min('13:41') <= minutes && minutes < t2min('14:20')){
+		endtime = '2:20'
+		remaining = result('14:20',time,today);
+	}
+	if (typeof remaining == 'undefined'){
+        endtime = '00:00'
+		remaining = 'Not in school'
+	}
+	var latestart = true
+	document.getElementById('time').innerHTML = endtime
+    document.getElementById('timeRemaining').innerHTML = remaining
+}
+document.body.onkeyup = function(e){
+    if(e.keyCode == 13){
+        if (latestart){
+			latestart()
+		}
+		else{
+			update()
+		}
+	}
 }
 update()
