@@ -4,6 +4,18 @@ function t2min(x){
 function result(x,time,today){
 	return ((t2min(x)-t2min(time)-1).toString() + ' minute(s) and ' + (60-parseInt(today.getSeconds(),10)).toString() + ' second(s) remaining');
 }
+var latetimer
+var updatetimer
+function settimer(){
+	if (late){
+		latetimer = setInterval(latestart,1000)
+		clearInterval(updatetimer)
+	}
+	else{
+		updatetimer = setInterval(update,1000)
+		clearInterval(latetimer)
+	}
+}
 function definetime(){
 	window.today = new Date();
 	window.day = today.getDay();
@@ -20,11 +32,11 @@ function definetime(){
 		window.time = today.getHours() + ':' + today.getMinutes()
 	}
 	window.minutes = today.getHours()*60 + today.getMinutes();
-    window.remaining;
-	window.endtime;
 }
 function update(){
 	definetime()
+	var endtime
+	var remaining
 	if ([1,3,5].includes(day)){
 		if (t2min('07:45') <= minutes && minutes < t2min('08:39')){
             endtime = '8:39'
@@ -103,10 +115,15 @@ function update(){
 	}
 	window.late = false
     document.getElementById('time').innerHTML = endtime
-    document.getElementById('timeRemaining').innerHTML = remaining
+	document.getElementById('timeRemaining').innerHTML = remaining
+	if (day == 3){
+		document.getElementById('late').innerHTML = 'Click if late start'
+	}
 }
 function latestart(){
 	definetime()
+	var endtime
+	var remaining
 	if (t2min('09:14') <= minutes && minutes < t2min('09:54')){
 		endtime = '9:54'
 		remaining = result('09:54',time,today);
@@ -145,7 +162,7 @@ function latestart(){
 	}
 	window.late = true
 	document.getElementById('time').innerHTML = endtime
-    document.getElementById('timeRemaining').innerHTML = remaining
+	document.getElementById('timeRemaining').innerHTML = remaining
 }
 document.body.onkeyup = function(e){
     if(e.keyCode == 13){
@@ -157,4 +174,8 @@ document.body.onkeyup = function(e){
 		}
 	}
 }
+function deletelate(){
+	document.getElementById('late').innerHTML = ''
+}
 update()
+settimer()
