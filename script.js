@@ -44,6 +44,10 @@ function convertendtime(x){
 		return (parseInt(x.slice(0,2),10)-12).toString() + ':' + x.slice(3)
 	}
 }
+function commitchanges(){
+	document.getElementById('time').innerHTML = endtime
+	document.getElementById('timeRemaining').innerHTML = remaining
+}
 function final(timearray){
 	for (var i = 0; i < timearray.length - 1; i++){
 		if (t2min(timearray[i]) <= minutes && minutes < t2min(timearray[i+1])){
@@ -63,28 +67,14 @@ function update(){
 		final(tutorialtimes)
 	}
 	checkremaining()
-	window.late = false
-    document.getElementById('time').innerHTML = endtime
-	document.getElementById('timeRemaining').innerHTML = remaining
+	commitchanges()
 }
 function latestart(){
 	definetime()
 	var latestarttimes = ['09:14','09:54','10:39','10:51','11:36','12:21','13:06','13:36','14:20']
 	final(latestarttimes)
 	checkremaining()
-	window.late = true
-	document.getElementById('time').innerHTML = endtime
-	document.getElementById('timeRemaining').innerHTML = remaining
-}
-document.body.onkeyup = function(e){
-    if(e.keyCode == 13){
-        if (late){
-			latestart()
-		}
-		else{
-			update()
-		}
-	}
+	commitchanges()
 }
 update()
 var updatetimer = setInterval(update,1000)
