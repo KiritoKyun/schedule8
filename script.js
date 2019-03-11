@@ -1,24 +1,27 @@
 function t2min(x){
-	return (parseInt(x.slice(0,2),10)*60+parseInt(x.slice(3),10));
+	return (parseInt(x.slice(0,2),10)*60+parseInt(x.slice(3),10))
 }
 function result(x,time,today){
-	return ((t2min(x)-t2min(time)-1).toString() + ' minute(s) and ' + (60-parseInt(today.getSeconds(),10)).toString() + ' second(s) remaining');
+	return ((t2min(x)-t2min(time)-1).toString() + ' minute(s) and ' + (60-parseInt(today.getSeconds(),10)).toString() + ' second(s) remaining')
 }
 var latetimer
 var updatetimer
-function settimer(){
-	if (late){
-		latetimer = setInterval(latestart,1000)
-		clearInterval(updatetimer)
-	}
-	else{
-		updatetimer = setInterval(update,1000)
-		clearInterval(latetimer)
+var endtime
+var remaining
+function checkremaining(){
+	if (typeof remaining == 'undefined'){
+        endtime = '00:00'
+		remaining = 'Not in school'
 	}
 }
+function setlatestarttimer(){
+	setInterval(latestart,1000)
+	clearInterval(updatetimer)
+	document.getElementById('late').innerHTML = ''
+}
 function definetime(){
-	window.today = new Date();
-	window.day = today.getDay();
+	window.today = new Date()
+	window.day = today.getDay()
 	if (today.getMinutes()<10 && today.getHours()<10){
 		window.time = '0' + today.getHours() + ':0' + today.getMinutes()
 	}
@@ -31,135 +34,44 @@ function definetime(){
 	else{
 		window.time = today.getHours() + ':' + today.getMinutes()
 	}
-	window.minutes = today.getHours()*60 + today.getMinutes();
+	window.minutes = today.getHours()*60 + today.getMinutes()
+}
+function convertendtime(x){
+	if (parseInt(x.slice(0,2),10)<13){
+		return parseInt(x.slice(0,2),10).toString() + ':' + x.slice(3)
+	}
+	else{
+		return (parseInt(x.slice(0,2),10)-12).toString() + ':' + x.slice(3)
+	}
+}
+function final(timearray){
+	for (var i = 0; i < timearray.length - 1; i++){
+		if (t2min(timearray[i]) <= minutes && minutes < t2min(timearray[i+1])){
+			endtime = convertendtime(timearray[i+1])
+			remaining = result(timearray[i+1],time,today)
+		}
+	}
 }
 function update(){
 	definetime()
-	var endtime
-	var remaining
 	if ([1,3,5].includes(day)){
-		if (t2min('07:45') <= minutes && minutes < t2min('08:39')){
-            endtime = '8:39'
-			remaining = result('08:39',time,today);
-		}
-		else if (t2min('08:39') <= minutes && minutes < t2min('09:45')){
-            endtime = '9:45'
-			remaining = result('09:45',time,today);
-		}
-		else if (t2min('09:45') <= minutes && minutes < t2min('10:47')){
-            endtime = '10:47'
-			remaining = result('10:47',time,today);
-		}
-		else if (t2min('10:47') <= minutes && minutes < t2min('11:02')){
-            endtime = '11:02'
-			remaining = result('11:02',time,today);
-		}
-		else if (t2min('11:02') <= minutes && minutes < t2min('12:01')){
-            endtime = '12:01'
-			remaining = result('12:01',time,today);
-		}
-		else if (t2min('12:01') <= minutes && minutes < t2min('13:03')){
-            endtime = '1:03'
-			remaining = result('13:03',time,today);
-		}
-		else if (t2min('13:03') <= minutes && minutes < t2min('13:36')){
-            endtime = '1:36'
-			remaining = result('13:36',time,today);
-		}
-		else if (t2min('13:36') <= minutes && minutes < t2min('14:35')){
-            endtime = '2:35'
-			remaining = result('14:35',time,today);
-		}
+		var normaltimes = ['07:45','08:39','09:45','10:47','11:02','12:01','13:03','13:36','14:35']
+		final(normaltimes)
 	}
 	else if ([2,4].includes(day)){
-		if (t2min('07:45') <= minutes && minutes < t2min('08:33')){
-            endtime = '8:33'
-			remaining = result('08:33',time,today);
-		}
-		else if (t2min('08:33') <= minutes && minutes < t2min('09:32')){
-            endtime = '9:32'
-			remaining = result('09:32',time,today);
-		}
-		else if (t2min('09:32') <= minutes && minutes < t2min('10:28')){
-            endtime = '10:28'
-			remaining = result('10:28',time,today);
-		}
-		else if (t2min('10:28') <= minutes && minutes < t2min('10:42')){
-            endtime = '10:42'
-			remaining = result('10:42',time,today);
-		}
-		else if (t2min('10:42') <= minutes && minutes < t2min('11:17')){
-            endtime = '11:17'
-			remaining = result('11:17',time,today);
-		}
-		else if (t2min('11:17') <= minutes && minutes < t2min('12:13')){
-            endtime = '12:13'
-			remaining = result('12:13',time,today);
-		}
-		else if (t2min('12:13') <= minutes && minutes < t2min('13:09')){
-            endtime = '1:09'
-			remaining = result('13:09',time,today);
-		}
-		else if (t2min('13:09') <= minutes && minutes < t2min('13:42')){
-            endtime = '1:42'
-			remaining = result('13:42',time,today);
-		}
-		else if (t2min('13:42') <= minutes && minutes < t2min('14:35')){
-            endtime = '2:35'
-			remaining = result('14:35',time,today);
-		}
+		var tutorialtimes = ['07:45','08:33','09:32','10:28','10:42','11:17','12:13','13:09','13:42','14:35']
+		final(tutorialtimes)
 	}
-	if (typeof remaining == 'undefined'){
-        endtime = '00:00'
-		remaining = 'Not in school'
-	}
+	checkremaining()
 	window.late = false
     document.getElementById('time').innerHTML = endtime
 	document.getElementById('timeRemaining').innerHTML = remaining
-	if (day == 3){
-		document.getElementById('late').innerHTML = 'Click if late start'
-	}
 }
 function latestart(){
 	definetime()
-	var endtime
-	var remaining
-	if (t2min('09:14') <= minutes && minutes < t2min('09:54')){
-		endtime = '9:54'
-		remaining = result('09:54',time,today);
-	}
-	else if (t2min('09:54') <= minutes && minutes < t2min('10:39')){
-		endtime = '10:39'
-		remaining = result('10:39',time,today);
-	}
-	else if (t2min('10:39') <= minutes && minutes < t2min('10:51')){
-		endtime = '10:51'
-		remaining = result('10:51',time,today);
-	}
-	else if (t2min('10:51') <= minutes && minutes < t2min('11:36')){
-		endtime = '11:36'
-		remaining = result('11:36',time,today);
-	}
-	else if (t2min('11:36') <= minutes && minutes < t2min('12:21')){
-		endtime = '12:21'
-		remaining = result('12:21',time,today);
-	}
-	else if (t2min('12:21') <= minutes && minutes < t2min('13:06')){
-		endtime = '1:06'
-		remaining = result('13:06',time,today);
-	}
-	else if (t2min('13:06') <= minutes && minutes < t2min('13:36')){
-		endtime = '1:36'
-		remaining = result('13:36',time,today);
-	}
-	else if (t2min('13:41') <= minutes && minutes < t2min('14:20')){
-		endtime = '2:20'
-		remaining = result('14:20',time,today);
-	}
-	if (typeof remaining == 'undefined'){
-        endtime = '00:00'
-		remaining = 'Not in school'
-	}
+	var latestarttimes = ['09:14','09:54','10:39','10:51','11:36','12:21','13:06','13:36','14:20']
+	final(latestarttimes)
+	checkremaining()
 	window.late = true
 	document.getElementById('time').innerHTML = endtime
 	document.getElementById('timeRemaining').innerHTML = remaining
@@ -174,8 +86,8 @@ document.body.onkeyup = function(e){
 		}
 	}
 }
-function deletelate(){
-	document.getElementById('late').innerHTML = ''
-}
 update()
-settimer()
+var updatetimer = setInterval(update,1000)
+if (day == 3){
+	document.getElementById('late').innerHTML = 'Click if late start'
+}
