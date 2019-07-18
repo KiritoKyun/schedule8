@@ -8,7 +8,9 @@
 </head>
 
 <body>
-	<a id = 'late' class = 'refresh' href = 'javascript: clear();latestart();setlatestarttimer()'></a>
+	<button style='visibility:hidden' onclick='customtimer();' class='refresh' id='customtimer'>Custom Timer</button>
+	<br>
+	<button style='visibility:hidden' id='late' class='refresh' onclick='clear();latestart();setlatestarttimer()'>Late Start</button>
 	<p id="time" class="t1"></p>
 	<p id='timeRemaining' class='t2'></p>
 	<script src="script.js"></script>

@@ -1,16 +1,24 @@
 function t2min(x){
 	return (parseInt(x.slice(0,2),10)*60+parseInt(x.slice(3),10))
 }
-var latetimer; var updatetimer; var endtime; var remaining;
+var latetimer; var updatetimer; var endtime; var remaining; var customtime; var latestarttimer; mobileDetect = mobileDetector();
+function mobileDetector(){
+	if(navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
+		return true
+	}
+	return false
+}
 function check(){
 	if (typeof remaining == 'undefined'){
 		clear()
 	}
 }
 function setlatestarttimer(){
-	setInterval(latestart,1000)
+	latestarttimer = setInterval(latestart,1000)
 	clearInterval(updatetimer)
-	document.getElementById('late').innerHTML = ''
+	document.getElementById('late').style.visibility = 'hidden'
+	customtime = null
+	clear()
 }
 function definetime(){
 	window.today = new Date()
@@ -39,7 +47,25 @@ function final(timearray){
 }
 function update(){
 	definetime()
-	if ([1,3,5].includes(day)){
+	if (customtime != null){
+		endtime = convertendtime(customtime)
+		if (today.getHours() > 12){
+			var customtime24 = (parseInt(customtime.slice(0,2),10)+12).toString() + customtime.slice(2)
+			remaining = (t2min(customtime24)-minutes-1).toString() + ' minute(s) and ' + (60-parseInt(today.getSeconds(),10)).toString() + ' second(s) remaining'
+			var custime = customtime24
+		}
+		else{
+			remaining = (t2min(customtime)-minutes-1).toString() + ' minute(s) and ' + (60-parseInt(today.getSeconds(),10)).toString() + ' second(s) remaining'
+			var custime = customtime
+		}
+		commitchanges()
+		if (t2min(custime)-minutes == 0){
+			document.getElementById('time').innerHTML = 'Time\'s up!'
+			document.getElementById('timeRemaining').innerHTML = ''
+			clearInterval(updatetimer)
+		}
+	}
+	else if ([1,3,5].includes(day)){
 		var normaltimes = ['07:45','08:39','09:45','10:47','11:02','12:01','13:03','13:36','14:35']
 		final(normaltimes)
 	}
@@ -60,8 +86,17 @@ function latestart(){
 	final(latestarttimes)
 	check()
 }
+function customtimer(){
+	window.customtime = prompt('Please enter your custom time (XX:XX):')
+	clearInterval(latestarttimer)
+	update()
+	updatetimer = setInterval(update,1000)
+}
 update()
 var updatetimer = setInterval(update,1000)
+if (mobileDetect ==  false){
+	document.getElementById('customtimer').style.visibility = 'visible'
+}
 if (day == 3){
-	document.getElementById('late').innerHTML = 'Click if late start'
+	document.getElementById('late').style.visibility = 'visible'
 }
