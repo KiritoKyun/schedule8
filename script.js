@@ -40,11 +40,11 @@ function final(timearray){
 function update(){
 	definetime()
 	if ([1,3,5].includes(day)){
-		var normaltimes = ['07:45','08:39','09:45','10:47','11:02','12:01','13:03','13:36','14:35']
+		var normaltimes = ['06:45','07:37','08:41','09:50','10:54','11:09','12:10','13:14','13:44','14:45']
 		final(normaltimes)
 	}
 	else if ([2,4].includes(day)){
-		var tutorialtimes = ['07:45','08:33','09:32','10:28','10:42','11:17','12:13','13:09','13:42','14:35']
+		var tutorialtimes = ['06:45','07:37','08:41','09:50','10:54','11:09','12:10','13:14','13:44','14:45']
 		final(tutorialtimes)
 	}
 	check()
@@ -56,7 +56,7 @@ function clear(){
 }
 function latestart(){
 	definetime()
-	var latestarttimes = ['09:14','09:54','10:39','10:51','11:36','12:21','13:06','13:36','14:20']
+	var latestarttimes = ['8:30','09:09','09:57','10:50','11:05','11:50','12:38','13:26','14:00','14:45']
 	final(latestarttimes)
 	check()
 }
